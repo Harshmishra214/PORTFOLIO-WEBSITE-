@@ -4,18 +4,870 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Harsh Mishra | AI Engineer & Developer Portfolio</title>
-    <meta name="description" content="Production-grade interactive 3D portfolio of Harsh Mishra, AI Engineering Student and Full-Stack Developer specializing in Machine Learning, Computer Vision, and intelligent systems." />
+    <meta name="description" content="Interactive 3D portfolio of Harsh Mishra crafted in modern HTML5, CSS3, and JavaScript with Three.js WebGL graphics, 3D card tilt physics, project inspector modal, and responsive design." />
     <meta property="og:title" content="Harsh Mishra | AI Engineer & Developer Portfolio" />
-    <meta property="og:description" content="Production-grade interactive 3D portfolio of Harsh Mishra, AI Engineering Student and Full-Stack Developer specializing in Machine Learning, Computer Vision, and intelligent systems." />
+    <meta property="og:description" content="Interactive 3D portfolio of Harsh Mishra crafted in modern HTML5, CSS3, and JavaScript with Three.js WebGL graphics, 3D card tilt physics, project inspector modal, and responsive design." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/src/index.css" />
   </head>
   <body class="bg-[#06080d] text-slate-100 antialiased selection:bg-cyan-500/30 selection:text-cyan-200 overflow-x-hidden">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <!-- Desktop Custom Cursor -->
+    <div id="custom-cursor-dot" class="hidden md:block"></div>
+    <div id="custom-cursor-follower" class="hidden md:block">
+      <span id="custom-cursor-badge"></span>
+    </div>
+
+    <!-- Cyber Background Mesh Grid & Ambient Glows -->
+    <div class="fixed inset-0 bg-grid-cyber pointer-events-none z-0 opacity-40"></div>
+    <div class="fixed top-0 left-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse-glow"></div>
+    <div class="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+
+    <!-- Floating Glass Header / Navbar -->
+    <header id="navbar-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-4 sm:px-6 pt-4 pointer-events-none">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <nav id="navbar-container" class="pointer-events-auto transition-all duration-300 w-full rounded-2xl flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3 glass-panel border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+          <!-- Logo Brand -->
+          <a href="#" class="flex items-center gap-2.5 group" data-cursor="pointer">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center font-display font-extrabold text-slate-950 text-sm shadow-[0_0_15px_rgba(0,240,255,0.4)] group-hover:scale-105 transition-transform">
+              HM
+            </div>
+            <div class="flex flex-col">
+              <span class="font-display font-extrabold tracking-tight text-white text-sm sm:text-base group-hover:text-cyan-300 transition-colors">
+                Harsh Mishra
+              </span>
+              <span class="text-[10px] font-mono-code text-cyan-400/80 -mt-1 hidden sm:block">
+                AI_ENGINEER.SYS
+              </span>
+            </div>
+          </a>
+
+          <!-- Desktop Navigation Links -->
+          <div class="hidden md:flex items-center gap-1 bg-white/[0.03] p-1 rounded-xl border border-white/5 text-xs font-mono-code">
+            <a href="#about" class="nav-link px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-all" data-cursor="pointer">ABOUT</a>
+            <a href="#skills" class="nav-link px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-all" data-cursor="pointer">SKILLS</a>
+            <a href="#projects" class="nav-link px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-all" data-cursor="pointer">PROJECTS</a>
+            <a href="#lab" class="nav-link px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-all" data-cursor="pointer">3D_LAB</a>
+            <a href="#journey" class="nav-link px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-all" data-cursor="pointer">JOURNEY</a>
+            <a href="#contact" class="nav-link px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-white/5 transition-all" data-cursor="pointer">CONTACT</a>
+          </div>
+
+          <!-- Header Actions: View Vanilla Code & Contact Button -->
+          <div class="hidden sm:flex items-center gap-2.5">
+            <button id="btn-view-source" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-mono-code bg-white/5 hover:bg-white/10 text-slate-300 hover:text-cyan-300 border border-white/10 transition-all cursor-pointer" data-cursor="pointer" title="View pure HTML, CSS, and JS code">
+              <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+              <span>HTML/CSS/JS</span>
+            </button>
+
+            <a href="#contact" class="relative group overflow-hidden px-4 py-1.5 rounded-xl font-mono-code text-xs font-semibold text-slate-950 bg-gradient-to-r from-cyan-400 to-emerald-400 shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:shadow-[0_0_25px_rgba(0,240,255,0.5)] transition-all cursor-pointer" data-cursor="pointer">
+              <span>Connect</span>
+            </a>
+          </div>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button id="btn-mobile-toggle" class="md:hidden p-2 rounded-xl bg-white/5 text-slate-300 hover:text-white border border-white/10 cursor-pointer" aria-label="Toggle menu" data-cursor="pointer">
+            <svg id="hamburger-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg id="close-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <div id="mobile-menu" class="pointer-events-auto md:hidden hidden mt-2 max-w-6xl mx-auto rounded-2xl glass-panel border border-white/10 p-4 shadow-2xl transition-all">
+        <div class="flex flex-col gap-1 text-sm font-mono-code">
+          <a href="#about" class="mobile-nav-link px-3 py-2 rounded-lg text-slate-300 hover:bg-white/5 hover:text-cyan-300">ABOUT</a>
+          <a href="#skills" class="mobile-nav-link px-3 py-2 rounded-lg text-slate-300 hover:bg-white/5 hover:text-cyan-300">SKILLS</a>
+          <a href="#projects" class="mobile-nav-link px-3 py-2 rounded-lg text-slate-300 hover:bg-white/5 hover:text-cyan-300">PROJECTS</a>
+          <a href="#lab" class="mobile-nav-link px-3 py-2 rounded-lg text-slate-300 hover:bg-white/5 hover:text-cyan-300">3D_LAB</a>
+          <a href="#journey" class="mobile-nav-link px-3 py-2 rounded-lg text-slate-300 hover:bg-white/5 hover:text-cyan-300">JOURNEY</a>
+          <a href="#contact" class="mobile-nav-link px-3 py-2 rounded-lg text-slate-300 hover:bg-white/5 hover:text-cyan-300">CONTACT</a>
+          <div class="pt-2 mt-2 border-t border-white/10 flex items-center justify-between">
+            <button id="btn-mobile-source" class="text-xs text-cyan-400 hover:underline flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+              View HTML/CSS/JS Source
+            </button>
+            <a href="https://github.com/Harshmishra214" target="_blank" class="text-xs text-slate-400 hover:text-white">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN WRAPPER -->
+    <main class="relative z-10">
+
+      <!-- ============================================== -->
+      <!-- SECTION 1: HERO WITH 3D INTERACTIVE CORE       -->
+      <!-- ============================================== -->
+      <section id="hero" class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full">
+          
+          <!-- Left Hero Column: Typography & Intent -->
+          <div class="lg:col-span-7 flex flex-col justify-center text-left z-10">
+            <!-- Status Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono-code backdrop-blur-md bg-white/[0.03] border border-cyan-500/30 text-cyan-300 mb-6 shadow-[0_0_20px_rgba(0,240,255,0.15)] w-fit">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+              <span class="font-medium">AVAILABLE FOR AI & FULL-STACK ROLES</span>
+            </div>
+
+            <!-- Main Headline -->
+            <div class="space-y-2 mb-4">
+              <h1 class="text-4xl sm:text-6xl md:text-7xl font-display font-extrabold text-white tracking-tight leading-[1.08]">
+                Hi, I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">Harsh Mishra</span>
+              </h1>
+              <p class="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-slate-300 tracking-tight">
+                Building intelligent digital experiences.
+              </p>
+            </div>
+
+            <!-- Subtitle Description -->
+            <p class="text-base sm:text-lg text-slate-400 max-w-2xl leading-relaxed mb-8 font-sans">
+              AI Engineering Student & Full-Stack Developer specializing in high-performance computer vision pipelines, machine learning models, spatial GIS engines, and modern responsive web systems.
+            </p>
+
+            <!-- Call-to-action Action Buttons -->
+            <div class="flex flex-wrap items-center gap-3.5 sm:gap-4 mb-10">
+              <a href="#projects" class="flex items-center gap-2 px-6 py-3 rounded-xl font-mono-code text-xs sm:text-sm font-semibold text-slate-950 bg-gradient-to-r from-cyan-400 to-emerald-400 shadow-[0_0_25px_rgba(0,240,255,0.35)] hover:shadow-[0_0_35px_rgba(0,240,255,0.55)] transition-all cursor-pointer group" data-cursor="pointer">
+                <span>Explore Systems</span>
+                <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+              </a>
+
+              <a href="#contact" class="flex items-center gap-2 px-5 py-3 rounded-xl font-mono-code text-xs sm:text-sm text-white glass-panel border border-white/10 hover:border-cyan-500/40 hover:bg-white/10 transition-all cursor-pointer" data-cursor="pointer">
+                <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                <span>Initiate Transmission</span>
+              </a>
+
+              <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="p-3 rounded-xl glass-panel border border-white/10 text-slate-400 hover:text-white hover:border-white/20 transition-all cursor-pointer" aria-label="GitHub Profile" data-cursor="pointer">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              </a>
+            </div>
+
+            <!-- Interactive Terminal Metric Bar -->
+            <div class="pt-6 border-t border-white/10 flex flex-wrap items-center gap-6 sm:gap-10 text-xs font-mono-code text-slate-400">
+              <div class="flex flex-col">
+                <span class="text-white font-bold text-sm sm:text-base">B.Tech AI & CS</span>
+                <span class="text-slate-400 text-[11px]">Academic Track</span>
+              </div>
+              <div class="h-6 w-px bg-white/10"></div>
+              <div class="flex flex-col">
+                <span class="text-cyan-400 font-bold text-sm sm:text-base">96.4% Acc</span>
+                <span class="text-slate-400 text-[11px]">Vision Models</span>
+              </div>
+              <div class="h-6 w-px bg-white/10"></div>
+              <div class="flex flex-col">
+                <span class="text-emerald-400 font-bold text-sm sm:text-base">4+ Shipped</span>
+                <span class="text-slate-400 text-[11px]">Production Systems</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Hero Column: Three.js Interactive 3D Canvas -->
+          <div class="lg:col-span-5 relative flex items-center justify-center w-full">
+            <div class="relative w-full aspect-square max-w-[480px]">
+              <!-- WebGL Three.js Container -->
+              <div id="hero-three-canvas" class="w-full h-full relative z-10 cursor-grab active:cursor-grabbing"></div>
+
+              <!-- Orbit Rings HUD overlay -->
+              <div class="absolute inset-0 pointer-events-none flex items-center justify-center -z-0">
+                <div class="w-[90%] h-[90%] border border-cyan-500/20 rounded-full animate-[spin_40s_linear_infinite]"></div>
+                <div class="absolute w-[75%] h-[75%] border border-emerald-500/15 rounded-full border-dashed animate-[spin_25s_linear_infinite_reverse]"></div>
+                <div class="absolute w-[60%] h-[60%] border border-purple-500/15 rounded-full animate-[pulse_4s_ease-in-out_infinite]"></div>
+              </div>
+
+              <!-- HUD Floating Labels -->
+              <div class="absolute bottom-4 left-4 z-20 backdrop-blur-md bg-black/40 border border-white/10 px-3 py-1.5 rounded-lg text-[11px] font-mono-code text-cyan-400 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span>NEURAL_CORE // MOUSE_TRACK</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SECTION 2: ABOUT & ARCHITECTURAL PILLARS       -->
+      <!-- ============================================== -->
+      <section id="about" class="relative py-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="mb-14">
+          <div class="backdrop-blur-md bg-white/[0.03] border border-white/10 px-3.5 py-1 rounded-full text-xs font-mono-code text-cyan-400 mb-3 inline-flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            <span>01 // PROFILE & PHILOSOPHY</span>
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+            Bridging Mathematical Logic with Shipped Software
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg max-w-3xl mt-3">
+            I believe software should be as mathematically rigorous under the hood as it is intuitive and responsive on the surface.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+          <div class="lg:col-span-7 glass-panel rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 leading-relaxed text-slate-300 text-sm sm:text-base space-y-4">
+            <p>
+              I am an AI Engineering undergraduate deeply invested in the intersection of algorithmic data structures, computer vision, and high-concurrency web systems. My journey started with competitive problem-solving in <span class="text-cyan-300 font-semibold font-mono-code">C++</span>, which instilled an obsession with algorithmic efficiency, cache locality, and low-latency computation.
+            </p>
+            <p>
+              Over the past two years, I expanded this foundation into applied Machine Learning and Deep Learning using <span class="text-emerald-300 font-semibold font-mono-code">Python, PyTorch, and OpenCV</span>. I architect real-time computer vision engines—from multi-stream traffic police gesture classification to biometric anti-spoofing facial recognition pipelines operating on edge devices.
+            </p>
+            <p>
+              Complementing AI research, I engineer production-ready web backbones with <span class="text-indigo-300 font-semibold font-mono-code">TypeScript, Node.js, PostgreSQL/PostGIS, and Three.js</span>, creating fluid interactive systems capable of streaming thousands of geographic polygons and complex visual telemetry seamlessly.
+            </p>
+          </div>
+
+          <!-- Quick Metrics Bento -->
+          <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+            <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+              <span class="text-xs font-mono-code text-slate-400 uppercase">Model Precision</span>
+              <span class="text-3xl sm:text-4xl font-display font-extrabold text-cyan-400 mt-3">96.4%</span>
+              <span class="text-xs text-slate-400 mt-1">Spatial gesture classification</span>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+              <span class="text-xs font-mono-code text-slate-400 uppercase">Edge Inference</span>
+              <span class="text-3xl sm:text-4xl font-display font-extrabold text-emerald-400 mt-3">38+ FPS</span>
+              <span class="text-xs text-slate-400 mt-1">Real-time video pipeline</span>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+              <span class="text-xs font-mono-code text-slate-400 uppercase">GIS Indexing</span>
+              <span class="text-3xl sm:text-4xl font-display font-extrabold text-purple-400 mt-3">50K+</span>
+              <span class="text-xs text-slate-400 mt-1">Cadastral vector parcels</span>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+              <span class="text-xs font-mono-code text-slate-400 uppercase">Systems Built</span>
+              <span class="text-3xl sm:text-4xl font-display font-extrabold text-amber-400 mt-3">4 Core</span>
+              <span class="text-xs text-slate-400 mt-1">Civic, health & CV engines</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Core Pillars Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="glass-panel glass-panel-hover rounded-2xl p-6 border border-white/10 group">
+            <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            </div>
+            <h3 class="text-lg font-display font-bold text-white mb-2">Algorithmic Rigor</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Mastery of data structures, graph traversals, and dynamic programming in C++, ensuring computational efficiency at every scale.
+            </p>
+          </div>
+
+          <div class="glass-panel glass-panel-hover rounded-2xl p-6 border border-white/10 group">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            </div>
+            <h3 class="text-lg font-display font-bold text-white mb-2">Computer Vision</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Real-time video inference, spatial-temporal graph neural networks, and anti-spoofing biometrics deployed on constrained edge devices.
+            </p>
+          </div>
+
+          <div class="glass-panel glass-panel-hover rounded-2xl p-6 border border-white/10 group">
+            <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path></svg>
+            </div>
+            <h3 class="text-lg font-display font-bold text-white mb-2">Spatial GIS & Web</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              PostgreSQL/PostGIS geospatial modeling, vector polygon conflict resolution, and modern full-stack web applications.
+            </p>
+          </div>
+
+          <div class="glass-panel glass-panel-hover rounded-2xl p-6 border border-white/10 group">
+            <div class="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+            </div>
+            <h3 class="text-lg font-display font-bold text-white mb-2">Research to Delivery</h3>
+            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Transforming academic papers and mathematical formulations into maintainable, containerized, test-backed software products.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SECTION 3: INTERACTIVE 3D TILT SKILLS MATRIX   -->
+      <!-- ============================================== -->
+      <section id="skills" class="relative py-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <div class="backdrop-blur-md bg-white/[0.03] border border-white/10 px-3.5 py-1 rounded-full text-xs font-mono-code text-cyan-400 mb-3 inline-flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span>02 // TECHNICAL ARSENAL</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+              Skills & Core Competencies
+            </h2>
+            <p class="text-slate-400 text-base sm:text-lg max-w-2xl mt-3">
+              Interactive capability cards with 3D mouse tracking tilt, depth perspective, and proficiency benchmarks.
+            </p>
+          </div>
+
+          <!-- Category Filter Tabs -->
+          <div id="skills-filter-container" class="flex flex-wrap gap-1.5 bg-white/[0.03] p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+            <button class="skill-filter-btn px-3.5 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm" data-category="All">All</button>
+            <button class="skill-filter-btn px-3.5 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Core Languages">Core Languages</button>
+            <button class="skill-filter-btn px-3.5 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="AI & Machine Learning">AI & Machine Learning</button>
+            <button class="skill-filter-btn px-3.5 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Web & Backend">Web & Backend</button>
+            <button class="skill-filter-btn px-3.5 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Databases & Tools">Databases & Tools</button>
+          </div>
+        </div>
+
+        <!-- Skills Cards Grid (Rendered dynamically via main.ts) -->
+        <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SECTION 4: FEATURED PROJECTS & CASE STUDIES    -->
+      <!-- ============================================== -->
+      <section id="projects" class="relative py-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <div class="backdrop-blur-md bg-white/[0.03] border border-white/10 px-3.5 py-1 rounded-full text-xs font-mono-code text-cyan-400 mb-3 inline-flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span>03 // FEATURED ENGINEERING</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+              Selected Systems & Research
+            </h2>
+            <p class="text-slate-400 text-base sm:text-lg max-w-2xl mt-3">
+              Deep dives into high-throughput vision architectures, cadastral GIS solutions, and clinical NLP pipelines.
+            </p>
+          </div>
+
+          <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-xs font-mono-code text-cyan-400 hover:text-cyan-300 transition-colors w-fit group">
+            <span>View All Public Repositories</span>
+            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </a>
+        </div>
+
+        <!-- Projects Cards Grid (Rendered dynamically with 3D tilt & inspector trigger) -->
+        <div id="projects-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-8"></div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SECTION 5: INTERACTIVE 3D SPATIAL LABORATORY   -->
+      <!-- ============================================== -->
+      <section id="lab" class="relative py-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="mb-12">
+          <div class="backdrop-blur-md bg-white/[0.03] border border-white/10 px-3.5 py-1 rounded-full text-xs font-mono-code text-cyan-400 mb-3 inline-flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            <span>04 // 3D SPATIAL LABORATORY</span>
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+            Interactive Three.js Sandbox
+          </h2>
+          <p class="text-slate-400 text-base sm:text-lg max-w-2xl mt-3">
+            Hardware-accelerated WebGL playground rendered with Three.js. Drag to orbit, toggle wireframe shaders, and switch procedural geometries in real time.
+          </p>
+        </div>
+
+        <!-- 3D Lab Glass Panel Container -->
+        <div class="glass-panel rounded-3xl p-6 sm:p-8 border border-white/10 shadow-2xl relative overflow-hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Left: 3D WebGL Canvas Viewport -->
+            <div class="lg:col-span-8 relative aspect-video w-full rounded-2xl overflow-hidden bg-[#04060a] border border-white/10 group">
+              <div id="lab-three-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+              <!-- Canvas HUD Overlay -->
+              <div class="absolute top-4 left-4 z-10 flex items-center gap-2 backdrop-blur-md bg-black/50 border border-white/10 px-3 py-1.5 rounded-lg text-xs font-mono-code text-cyan-300">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="lab-geometry-indicator">TORUS_KNOT // ACTIVE</span>
+              </div>
+
+              <div class="absolute bottom-4 left-4 z-10 hidden sm:flex items-center gap-2 backdrop-blur-md bg-black/40 border border-white/10 px-3 py-1 rounded-lg text-[11px] font-mono-code text-slate-400">
+                <span>DRAG TO ORBIT</span>
+                <span>•</span>
+                <span>SCROLL TO ZOOM</span>
+              </div>
+            </div>
+
+            <!-- Right: Real-Time Interactive Controls -->
+            <div class="lg:col-span-4 flex flex-col justify-between space-y-6">
+              <div>
+                <h3 class="text-lg font-display font-bold text-white mb-1">
+                  Procedural Geometry
+                </h3>
+                <p class="text-xs text-slate-400 mb-4">
+                  Select mathematical mesh topologies rendered in WebGL:
+                </p>
+
+                <!-- Geometry Selector Buttons -->
+                <div class="grid grid-cols-2 gap-2">
+                  <button class="lab-geo-btn px-3 py-2.5 rounded-xl text-xs font-mono-code text-left border transition-all cursor-pointer bg-cyan-500/20 border-cyan-500/50 text-cyan-300" data-geo="torusKnot">
+                    <span>Torus Knot</span>
+                  </button>
+                  <button class="lab-geo-btn px-3 py-2.5 rounded-xl text-xs font-mono-code text-left border transition-all cursor-pointer bg-white/[0.03] border-white/10 text-slate-400 hover:text-white hover:bg-white/5" data-geo="icosahedron">
+                    <span>Icosahedron</span>
+                  </button>
+                  <button class="lab-geo-btn px-3 py-2.5 rounded-xl text-xs font-mono-code text-left border transition-all cursor-pointer bg-white/[0.03] border-white/10 text-slate-400 hover:text-white hover:bg-white/5" data-geo="sphere">
+                    <span>Geodesic Sphere</span>
+                  </button>
+                  <button class="lab-geo-btn px-3 py-2.5 rounded-xl text-xs font-mono-code text-left border transition-all cursor-pointer bg-white/[0.03] border-white/10 text-slate-400 hover:text-white hover:bg-white/5" data-geo="cylinder">
+                    <span>Quantum Core</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Shader & Render Toggles -->
+              <div class="space-y-4 pt-4 border-t border-white/10">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono-code text-slate-300">Wireframe Shader</span>
+                  <button id="btn-toggle-wireframe" class="px-3 py-1 rounded-lg text-xs font-mono-code bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 cursor-pointer">
+                    Wireframe: OFF
+                  </button>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono-code text-slate-300">Rotation Velocity</span>
+                  <div class="flex items-center gap-1.5">
+                    <button class="lab-speed-btn px-2 py-0.5 rounded text-xs font-mono-code bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 cursor-pointer" data-speed="0.5">0.5x</button>
+                    <button class="lab-speed-btn px-2 py-0.5 rounded text-xs font-mono-code bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 cursor-pointer" data-speed="1.0">1x</button>
+                    <button class="lab-speed-btn px-2 py-0.5 rounded text-xs font-mono-code bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 cursor-pointer" data-speed="2.0">2x</button>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono-code text-slate-300">Particle Aura</span>
+                  <button id="btn-toggle-particles" class="px-3 py-1 rounded-lg text-xs font-mono-code bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 cursor-pointer">
+                    Constellation: ON
+                  </button>
+                </div>
+              </div>
+
+              <!-- Telemetry footer note -->
+              <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5 text-[11px] font-mono-code text-slate-400 flex items-center gap-2">
+                <svg class="w-4 h-4 text-cyan-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Direct Three.js WebGL canvas rendering at 60 FPS.</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SECTION 6: ENGINEERING JOURNEY TIMELINE        -->
+      <!-- ============================================== -->
+      <section id="journey" class="relative py-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+          <div>
+            <div class="backdrop-blur-md bg-white/[0.03] border border-white/10 px-3.5 py-1 rounded-full text-xs font-mono-code text-cyan-400 mb-3 inline-flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span>05 // TRAJECTORY & MILESTONES</span>
+            </div>
+            <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight">
+              Engineering Journey
+            </h2>
+            <p class="text-slate-400 text-base sm:text-lg max-w-2xl mt-3">
+              Chronological milestones documenting academic training, national hackathons, independent platform deployments, and continuous research.
+            </p>
+          </div>
+
+          <!-- Timeline Category Filter Tabs -->
+          <div id="journey-filter-container" class="flex flex-wrap gap-1.5 bg-white/[0.03] p-1.5 rounded-2xl border border-white/10 backdrop-blur-md">
+            <button class="journey-filter-btn px-3 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm" data-category="All">All</button>
+            <button class="journey-filter-btn px-3 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Education">Education</button>
+            <button class="journey-filter-btn px-3 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Projects">Projects</button>
+            <button class="journey-filter-btn px-3 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Hackathons">Hackathons</button>
+            <button class="journey-filter-btn px-3 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Open Source">Open Source</button>
+            <button class="journey-filter-btn px-3 py-1.5 text-xs font-mono-code rounded-xl transition-all cursor-pointer text-slate-400 hover:text-white hover:bg-white/5 border border-transparent" data-category="Learning">Learning</button>
+          </div>
+        </div>
+
+        <!-- Vertical Timeline Container -->
+        <div class="relative pl-6 md:pl-10">
+          <!-- Glowing Spine Line -->
+          <div class="absolute left-6 md:left-10 top-3 bottom-3 w-[2px] bg-gradient-to-b from-cyan-500/60 via-emerald-500/40 to-slate-800 -translate-x-1/2"></div>
+          
+          <!-- Timeline Items (Rendered dynamically) -->
+          <div id="journey-timeline-items" class="space-y-12"></div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SECTION 7: GITHUB ECOSYSTEM SHOWCASE           -->
+      <!-- ============================================== -->
+      <section id="github" class="relative py-20 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="glass-panel rounded-3xl p-6 sm:p-10 md:p-12 border border-white/10 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-10 pb-8 border-b border-white/10">
+            <div>
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-mono-code text-cyan-300 mb-3">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>GITHUB ECOSYSTEM</span>
+              </div>
+              <h3 class="text-2xl sm:text-4xl font-display font-extrabold text-white tracking-tight">
+                Open Source & Public Repositories
+              </h3>
+              <p class="text-slate-400 text-sm sm:text-base mt-2 max-w-xl">
+                Exploring reproducible computer vision workflows, machine learning models, and full-stack systems under <span class="text-cyan-300 font-mono-code">@Harshmishra214</span>.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button id="btn-copy-github" class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono-code bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all cursor-pointer" data-cursor="pointer">
+                <svg id="copy-github-icon" class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                <span id="copy-github-text">Copy GitHub URL</span>
+              </button>
+
+              <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-mono-code font-semibold text-slate-950 bg-gradient-to-r from-cyan-400 to-emerald-400 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all cursor-pointer" data-cursor="pointer">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                <span>Follow on GitHub ↗</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Featured Public Repos Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Repo 1 -->
+            <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover rounded-xl p-5 border border-white/5 flex flex-col justify-between group" data-cursor="pointer">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-sm font-mono-code font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    traffic-police-gesture-recognition
+                  </span>
+                  <span class="text-slate-500 group-hover:text-cyan-400">↗</span>
+                </div>
+                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                  Autonomous spatial gesture classification using MediaPipe keypoints & ST-GCN network for smart traffic lights.
+                </p>
+              </div>
+              <div class="flex items-center justify-between text-xs font-mono-code text-slate-400 pt-3 border-t border-white/5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-[#3572A5]"></span>
+                  <span>Python</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="flex items-center gap-1"><span class="text-amber-400">★</span> 34</span>
+                  <span class="flex items-center gap-1"><span class="text-slate-400">⑂</span> 8</span>
+                </div>
+              </div>
+            </a>
+
+            <!-- Repo 2 -->
+            <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover rounded-xl p-5 border border-white/5 flex flex-col justify-between group" data-cursor="pointer">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-sm font-mono-code font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    land-governance-gis-engine
+                  </span>
+                  <span class="text-slate-500 group-hover:text-cyan-400">↗</span>
+                </div>
+                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                  Cadastral parcel registry with PostGIS spatial algorithms, vector polygon overlays, and overlap validation.
+                </p>
+              </div>
+              <div class="flex items-center justify-between text-xs font-mono-code text-slate-400 pt-3 border-t border-white/5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-[#3178C6]"></span>
+                  <span>TypeScript</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="flex items-center gap-1"><span class="text-amber-400">★</span> 28</span>
+                  <span class="flex items-center gap-1"><span class="text-slate-400">⑂</span> 5</span>
+                </div>
+              </div>
+            </a>
+
+            <!-- Repo 3 -->
+            <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover rounded-xl p-5 border border-white/5 flex flex-col justify-between group" data-cursor="pointer">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-sm font-mono-code font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    medical-records-ehr-nlp
+                  </span>
+                  <span class="text-slate-500 group-hover:text-cyan-400">↗</span>
+                </div>
+                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                  HIPAA-compliant medical records platform featuring clinical BERT NER extraction and encrypted patient timelines.
+                </p>
+              </div>
+              <div class="flex items-center justify-between text-xs font-mono-code text-slate-400 pt-3 border-t border-white/5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-[#3572A5]"></span>
+                  <span>Python</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="flex items-center gap-1"><span class="text-amber-400">★</span> 42</span>
+                  <span class="flex items-center gap-1"><span class="text-slate-400">⑂</span> 11</span>
+                </div>
+              </div>
+            </a>
+
+            <!-- Repo 4 -->
+            <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover rounded-xl p-5 border border-white/5 flex flex-col justify-between group" data-cursor="pointer">
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <span class="text-sm font-mono-code font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-2">
+                    <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                    face-attendance-vision-system
+                  </span>
+                  <span class="text-slate-500 group-hover:text-cyan-400">↗</span>
+                </div>
+                <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed mb-4">
+                  RetinaFace + FaceNet biometric attendance platform with anti-spoofing liveness verification.
+                </p>
+              </div>
+              <div class="flex items-center justify-between text-xs font-mono-code text-slate-400 pt-3 border-t border-white/5">
+                <div class="flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-[#3572A5]"></span>
+                  <span>Python</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="flex items-center gap-1"><span class="text-amber-400">★</span> 25</span>
+                  <span class="flex items-center gap-1"><span class="text-slate-400">⑂</span> 6</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- SECTION 8: INITIATE TRANSMISSION (CONTACT)     -->
+      <!-- ============================================== -->
+      <section id="contact" class="relative py-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          <!-- Left Column: Direct Info & Quick Channels -->
+          <div class="lg:col-span-5 flex flex-col justify-between">
+            <div>
+              <div class="backdrop-blur-md bg-white/[0.03] border border-white/10 px-3.5 py-1 rounded-full text-xs font-mono-code text-cyan-400 mb-3 inline-flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                <span>06 // INITIATE TRANSMISSION</span>
+              </div>
+              <h2 class="text-3xl sm:text-5xl font-display font-extrabold text-white tracking-tight leading-tight mb-4">
+                Let's build something meaningful.
+              </h2>
+              <p class="text-slate-400 text-sm sm:text-base leading-relaxed mb-8">
+                Whether you are looking to collaborate on machine learning research, discuss algorithmic challenges, explore high-throughput computer vision projects, or discuss AI engineering opportunities, I'm always open to connecting.
+              </p>
+            </div>
+
+            <!-- Direct channels -->
+            <div class="space-y-4">
+              <h3 class="text-xs font-mono-code uppercase tracking-wider text-slate-400">
+                Direct Contact & Social Profiles
+              </h3>
+
+              <!-- Email Pill with One-Click Copy -->
+              <div class="glass-panel rounded-xl p-3 sm:p-4 border border-white/10 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 truncate">
+                  <div class="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 flex-shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                  </div>
+                  <div class="truncate">
+                    <span class="text-[10px] font-mono-code text-slate-400 block">DIRECT INBOX</span>
+                    <a href="mailto:hm5884116@gmail.com" class="text-xs sm:text-sm font-mono-code text-slate-200 hover:text-cyan-300 transition-colors truncate block">
+                      hm5884116@gmail.com
+                    </a>
+                  </div>
+                </div>
+
+                <button id="btn-copy-email" class="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors flex-shrink-0 cursor-pointer" title="Copy email" data-cursor="pointer">
+                  <svg id="copy-email-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                </button>
+              </div>
+
+              <!-- Social Buttons: GitHub, LinkedIn, Direct Mail -->
+              <div class="grid grid-cols-3 gap-2.5 pt-2">
+                <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-white/10 text-slate-300 hover:text-white group" data-cursor="pointer">
+                  <svg class="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  <span class="text-[11px] font-mono-code">GitHub</span>
+                </a>
+
+                <a href="https://linkedin.com/in/harshmishra" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-white/10 text-slate-300 hover:text-white group" data-cursor="pointer">
+                  <svg class="w-5 h-5 text-indigo-400 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+                  <span class="text-[11px] font-mono-code">LinkedIn</span>
+                </a>
+
+                <a href="mailto:hm5884116@gmail.com" class="glass-panel glass-panel-hover rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 border border-white/10 text-slate-300 hover:text-white group" data-cursor="pointer">
+                  <svg class="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                  <span class="text-[11px] font-mono-code">Email</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Validated Contact Form -->
+          <div class="lg:col-span-7">
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 md:p-10 border border-white/10 shadow-2xl relative">
+              <h3 class="text-xl font-display font-bold text-white mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                Send a Direct Message
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-400 mb-6">
+                All messages are dispatched immediately. Expect a response within 24 hours.
+              </p>
+
+              <!-- Success Alert (Hidden initially) -->
+              <div id="contact-success-alert" class="hidden mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-3">
+                <svg class="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <div>
+                  <h4 class="text-sm font-semibold text-emerald-300">Message Dispatched Successfully!</h4>
+                  <p class="text-xs text-emerald-200/80 mt-1">Thank you for reaching out, Harsh will review your transmission and get back to you shortly.</p>
+                </div>
+              </div>
+
+              <!-- Form Element -->
+              <form id="contact-form" novalidate class="space-y-4">
+                <!-- Name Field -->
+                <div>
+                  <label for="contact-name" class="block text-xs font-mono-code uppercase tracking-wider text-slate-300 mb-1.5">
+                    Your Name <span class="text-cyan-400">*</span>
+                  </label>
+                  <input id="contact-name" type="text" placeholder="e.g. Alex Morgan" class="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/50 transition-all" />
+                  <p id="err-contact-name" class="hidden mt-1 text-xs text-rose-400 font-mono-code"></p>
+                </div>
+
+                <!-- Email Field -->
+                <div>
+                  <label for="contact-email" class="block text-xs font-mono-code uppercase tracking-wider text-slate-300 mb-1.5">
+                    Your Email Address <span class="text-cyan-400">*</span>
+                  </label>
+                  <input id="contact-email" type="email" placeholder="e.g. alex@example.com" class="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/50 transition-all" />
+                  <p id="err-contact-email" class="hidden mt-1 text-xs text-rose-400 font-mono-code"></p>
+                </div>
+
+                <!-- Message Field -->
+                <div>
+                  <label for="contact-message" class="block text-xs font-mono-code uppercase tracking-wider text-slate-300 mb-1.5">
+                    Your Message <span class="text-cyan-400">*</span>
+                  </label>
+                  <textarea id="contact-message" rows="4" placeholder="Describe your project, question, or opportunity..." class="w-full px-4 py-3 rounded-xl bg-white/[0.03] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400/50 transition-all resize-none"></textarea>
+                  <p id="err-contact-message" class="hidden mt-1 text-xs text-rose-400 font-mono-code"></p>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="pt-2">
+                  <button id="contact-submit-btn" type="submit" class="flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 rounded-xl font-mono-code text-xs sm:text-sm font-semibold text-slate-950 bg-gradient-to-r from-cyan-400 to-emerald-400 shadow-[0_0_20px_rgba(0,240,255,0.3)] hover:shadow-[0_0_30px_rgba(0,240,255,0.5)] transition-all cursor-pointer disabled:opacity-50">
+                    <span id="contact-btn-text">Send Message</span>
+                    <svg id="contact-btn-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                  </button>
+                </div>
+              </form>
+
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============================================== -->
+    <!-- FOOTER                                         -->
+    <!-- ============================================== -->
+    <footer class="relative border-t border-white/10 bg-[#05070c] py-12 px-4 sm:px-6 lg:px-12 z-10">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex flex-col items-center md:items-start text-center md:text-left">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="font-display font-extrabold text-lg text-cyan-400">HM.</span>
+            <span class="text-sm font-display font-bold text-white">Harsh Mishra</span>
+          </div>
+          <p class="text-xs text-slate-400">
+            AI Engineering Student & Developer • Built with HTML5, CSS3, JavaScript & Three.js WebGL.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center gap-3 text-[11px] font-mono-code text-slate-400">
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5">
+            HTML5 & CSS3
+          </span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5">
+            Three.js WebGL
+          </span>
+          <span class="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/5">
+            Vanilla JavaScript
+          </span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <a href="https://github.com/Harshmishra214" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-colors" aria-label="GitHub" data-cursor="pointer">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          </a>
+          <a href="https://linkedin.com/in/harshmishra" target="_blank" rel="noopener noreferrer" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-colors" aria-label="LinkedIn" data-cursor="pointer">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+          </a>
+          <a href="mailto:hm5884116@gmail.com" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-400 hover:text-white transition-colors" aria-label="Email" data-cursor="pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+          </a>
+          <button id="btn-back-to-top" class="p-2.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 hover:text-cyan-300 transition-colors cursor-pointer" aria-label="Back to top" data-cursor="pointer">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+          </button>
+        </div>
+      </div>
+      <div class="max-w-7xl mx-auto mt-8 pt-6 border-t border-white/5 text-center text-xs font-mono-code text-slate-500">
+        © <span id="current-year"></span> Harsh Mishra • All systems operational • Hosted on Google Cloud
+      </div>
+    </footer>
+
+    <!-- ============================================== -->
+    <!-- PROJECT DETAILS MODAL DIALOG                   -->
+    <!-- ============================================== -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div id="project-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"></div>
+      <div class="relative w-full max-w-4xl glass-panel bg-[#090e18]/95 border border-white/15 rounded-3xl p-6 sm:p-8 md:p-10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] z-10 my-8 max-h-[90vh] overflow-y-auto">
+        <button id="btn-close-project-modal" class="absolute top-6 right-6 p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer" aria-label="Close modal">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <div id="project-modal-content"></div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- SOURCE CODE (HTML / CSS / JS) MODAL DIALOG     -->
+    <!-- ============================================== -->
+    <div id="source-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div id="source-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"></div>
+      <div class="relative w-full max-w-4xl glass-panel bg-[#090e18]/95 border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl z-10 my-8 max-h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between pb-4 border-b border-white/10">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+            </div>
+            <div>
+              <h3 class="text-base sm:text-lg font-display font-bold text-white">Pure HTML, CSS & JavaScript Architecture</h3>
+              <p class="text-xs text-slate-400">Semantic markup, modern styling & vanilla WebGL execution</p>
+            </div>
+          </div>
+          <button id="btn-close-source-modal" class="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white transition-colors cursor-pointer">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <!-- Code Snippet Tabs -->
+        <div class="flex items-center justify-between pt-4 pb-2">
+          <div class="flex gap-2">
+            <button class="source-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono-code bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 cursor-pointer" data-tab="html">index.html</button>
+            <button class="source-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono-code bg-white/5 text-slate-400 hover:text-white border border-white/10 cursor-pointer" data-tab="css">style.css</button>
+            <button class="source-tab-btn px-3 py-1.5 rounded-lg text-xs font-mono-code bg-white/5 text-slate-400 hover:text-white border border-white/10 cursor-pointer" data-tab="js">main.js (Three.js)</button>
+          </div>
+          <button id="btn-copy-active-source" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono-code bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 cursor-pointer">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+            <span id="copy-source-text">Copy File</span>
+          </button>
+        </div>
+
+        <!-- Code Display Pre Block -->
+        <div class="flex-1 overflow-auto rounded-xl bg-black/60 border border-white/10 p-4 mt-2">
+          <pre id="source-code-pre" class="text-xs font-mono-code text-slate-300 leading-relaxed overflow-x-auto whitespace-pre"></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Entry Script: Pure JavaScript / Three.js Controller -->
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
-
