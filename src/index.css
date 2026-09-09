@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-display: 'Syne', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #06080d;
+    color: #e2e8f0;
+  }
+
+  /* When custom cursor is active on non-touch devices */
+  @media (hover: hover) and (pointer: fine) {
+    body.has-custom-cursor,
+    body.has-custom-cursor a,
+    body.has-custom-cursor button,
+    body.has-custom-cursor input,
+    body.has-custom-cursor textarea,
+    body.has-custom-cursor select {
+      cursor: none !important;
+    }
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #06080d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.4);
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(14, 20, 31, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(19, 27, 43, 0.8);
+  border-color: rgba(0, 240, 255, 0.25);
+  box-shadow: 0 10px 30px -10px rgba(0, 240, 255, 0.12);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-code {
+  font-family: var(--font-mono);
+}
+
+/* Cyber mesh grid background */
+.bg-grid-cyber {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.bg-radial-gradient {
+  background: radial-gradient(circle at 50% 20%, rgba(0, 240, 255, 0.08) 0%, rgba(6, 8, 13, 0) 70%);
+}
+
